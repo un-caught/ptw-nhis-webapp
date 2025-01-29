@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <style>
+        .status {
+            font-weight: bold;
+        }
+        .status.approved {
+            color: green;
+        }
+        .status.pending {
+            color: orange;
+        }
+        .status.disapproved {
+            color: red;
+        }
+        .status.open {
+            color: orange;
+        }
+        .status.closed {
+            color: green;
+        }
+        .status.denied {
+            color: red;
+        }
+        .status.awaiting_manager {
+            color: orange;
+        }
+        .status.awaiting_supervisor {
+            color: orange;
+        }
+    </style>
+</head>
+
+
+    <div class="container mt-5">
+        
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h1 class="text-center mb-4 mt-2">Form Submission Report</h1>
+                <!-- Filters -->
+                <div class="filters mb-4">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="startDate" class="form-label">Start Date:</label>
+                            <input type="date" name="startDate" class="form-control" value="{{ start_date }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="endDate" class="form-label">End Date:</label>
+                            <input type="date" name="endDate" class="form-control" value="{{ end_date }}">
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Generate Report</button>
+                        </div>
+                    </form>
+                </div>
+
+                {% if report_data %}
+                    <div class="mb-4">
+                        <h3>Total NHIS Forms Submitted: <span class="badge bg-info">{{ total_nhis }}</span></h3>
+                        <h3>Total PTW Forms Submitted: <span class="badge bg-info">{{ total_ptw }}</span></h3>
+                    </div>
+
+                    
+
+                    <!-- Table -->
+                    <table class="table  table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Form Type</th>
+                                <th>Form ID</th>
+                                <th>Date Submitted</th>
+                                <th>User</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for submission in report_data %}
+                                <tr>
+                                    <td>{{ submission.form_type }}</td>
+                                    <td>{{ submission.form_id }}</td>
+                                    <td>{{ submission.date_submitted }}</td>
+                                    <td>{{ submission.user }}</td>
+                                    <td>{{ submission.location }}</td>
+                                    <td class="status {{ submission.status }}">{{ submission.status|capfirst }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        <a href="?startDate={{ start_date }}&endDate={{ end_date }}&export=true" class="btn btn-success">Export to Excel</a>
+                    </table>
+
+
+                    <div class="mb-4 pt-5 " style="width: 50%; height: 50%;">
+                        <h3>Form Type Distribution</h3>
+                        <canvas id="pieChart" style="width: 200; height: 200;"></canvas> 
+                        <script>
+                            var ctx = document.getElementById('pieChart').getContext('2d');
+                            var pieChart = new Chart(ctx, {
+                                type: 'pie',
+                                data: {
+                                    labels: ['NHIS', 'PTW'],
+                                    datasets: [{
+                                        data: [{{ pie_chart_data_form_type.NHIS }}, {{ pie_chart_data_form_type.PTW }}],
+                                        backgroundColor: ['#36A2EB', '#FFCE56'],
+                                    }]
+                                    
+                                },
+                            });
+                        </script>
+                    </div>
+                    <div class="mb-4 pt-5" style="width: 50%; height: 50%;">
+                        <h3>PTW Status Distribution</h3>
+                        <canvas id="statusPieChart" style="width: 200; height: 200;"></canvas>
+                        <script>
+                            var ctx = document.getElementById('statusPieChart').getContext('2d');
+                            var statusPieChart = new Chart(ctx, {
+                                type: 'pie',
+                                data: {
+                                    labels: ['Pending', 'Approved', 'Disapproved', 'Awaiting Manager', 'Awaiting Supervisor'],  // Customize this if other statuses exist
+                                    datasets: [{
+                                        data: [{{ pie_chart_data_status.pending }}, {{ pie_chart_data_status.approved }}, {{ pie_chart_data_status.disapproved }}, {{ pie_chart_data_status.awaiting_manager }}, {{ pie_chart_data_status.awaiting_supervisor }}],
+                                        backgroundColor: ['#FF5733', '#4CAF50', '#d7290a', '#e9b77d','#331f07'],
+                                    }]
+                                },
+                            });
+                        </script>
+                    </div>
+                    <div class="mb-4 pt-5" style="width: 50%; height: 50%;">
+                        <h3>NHIS Status Distribution</h3>
+                        <canvas id="nhisstatusPieChart" style="width: 200px; height: 200px;"></canvas>
+                        <script>
+                            var ctx = document.getElementById('nhisstatusPieChart').getContext('2d');
+                            var statusPieChart = new Chart(ctx, {
+                                type: 'pie',
+                                data: {
+                                    labels: ['Open', 'Closed', 'Denied'],  // Customize this if other statuses exist
+                                    datasets: [{
+                                        data: [{{ pie_chart_data_status.open }}, {{ pie_chart_data_status.closed }}, {{ pie_chart_data_status.denied }}],
+                                        backgroundColor: ['#f48d0c', '#4CAF50', '#d7290a'],
+                                    }]
+                                },
+                            });
+                        </script>
+                    </div>
+                {% else %}
+                    <p>There are no submissions within the specified date range.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}

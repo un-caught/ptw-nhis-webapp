@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">NHIS Form Submission Details</h1>
+
+    <!-- Submission Details Card -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="card-title">Form ID: {{ submission.id }}</h3>
+            <p><strong>Date Submitted:</strong> {{ submission.date }}</p>
+            <p><strong>User:</strong> {{ submission.user.get_full_name }}</p>
+            <p><strong>Location:</strong> {{ submission.location }}</p>
+            <p><strong>Status:</strong> {{ submission.status }}</p>
+            <br><br>
+            <h2>Details:</h2>
+            <p><strong>Work Description:</strong> {{ submission.work_description }}</p>
+            <p><strong>Equipment/Tools/Materials To Be Used:</strong> {{ submission.equipment_tools_materials }}</p>
+            <p><strong>Risk Assessment:</strong> {{ submission.risk_assessment_done }}</p>
+
+            <!-- If there are additional fields in NHISForm, display them here -->
+            {% if submission.additional_field %}
+                <p><strong>Additional Field:</strong> {{ submission.additional_field }}</p>
+            {% endif %}
+
+            <div class="mt-4">
+                <a href="{% url 'form_list' %}" class="btn btn-secondary">Back to Report</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
