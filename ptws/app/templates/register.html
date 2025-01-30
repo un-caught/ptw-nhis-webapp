@@ -47,12 +47,22 @@
         </div>
         <form method="POST">
             {% csrf_token %}
-            <div class="d-flex gap-3">
+            <div class="d-flex gap-5 flex-wrap" style="padding-left: 40px; width: 70rem; ">
             <!-- Username Field -->
-                <div class="input-box d-flex flex-column align-items-start" style="background-color: #89d05a;">
+                <div class="input-box d-flex flex-column align-items-start " style="background-color: #89d05a;">
                     <label class="label" for="username" style="margin-bottom: 5px;">Username</label>
                     {{form.username}}
                 </div>
+                <!-- Email Field -->
+                <div class="input-box d-flex flex-column align-items-start" style="background-color: #89d05a;">
+                    <label class="label" for="username" style="margin-bottom: 5px;">Email</label>
+                    {{form.email}}
+                </div>
+                <div class="input-box flex-column align-items-start" style="background-color: #89d05a;">
+                    <label class="label" for="group" style="margin-bottom: 5px;">Select Group</label>
+                    {{form.group_choices}}
+                </div>
+                
             <!-- Password Field -->
                 <div class="input-box d-flex flex-column align-items-start" style="background-color: #ffcd69;">
                     <label class="label" for="password1" style="margin-bottom: 5px;">Password</label>
@@ -63,7 +73,8 @@
                     <label class="label" for="password2" style="margin-bottom: 5px;">Confirm Password</label>
                     {{form.password2}}
                 </div>
-                <div class="bg-info w-25 input-box d-flex align-items-center justify-content-center" style="background-color: #69d0ff;">
+                
+                <div class="bg-info  input-box d-flex align-items-center justify-content-center" style="background-color: #69d0ff;">
                     <button class="btn text-light text-decoration-none border-0 bg-transparent">
                         Register <i class="fas fa-user-plus"></i>
                     </button>

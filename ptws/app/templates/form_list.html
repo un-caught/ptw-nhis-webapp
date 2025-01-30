@@ -5,9 +5,16 @@
 <div class="card shadow-sm mt-6">
     <div class="card-body">
         <h1 class="text-center mb-4 mt-2">Permit to Work (PTW) Forms</h1>
-        {% if is_client %}
+        {% if is_vendor %}
         <a href="{% url 'create_form' %}" class="btn btn-primary mb-3" >Create New PTW Form</a>
         {% endif %}
+
+        <form method="get" class="mb-4">
+            <div class="input-group">
+                <input type="text" class="form-control" name="location_search" placeholder="Search by Location" value="{{ request.GET.location_search }}">
+                <button class="btn btn-secondary" type="submit">Search</button>
+            </div>
+        </form>
 
         <div class="table-responsive">
             <table class="table table-bordered">
@@ -16,7 +23,7 @@
                         {% if is_supervisor %}
                         <th scope="col">Submitted By</th>
                         {% endif %}
-                        <th scope="col">Name</th>
+                        
                         <th scope="col">Location</th>
                         <th scope="col">Risk Assessment</th>
                         <th scope="col">Status</th>
@@ -31,24 +38,22 @@
                         {% for submission in submissions %}
                         <tr>
                             {% if is_supervisor %}
-                            <td>{{ submission.user.username }}</td>
+                            <td>{{ submission.user }}</td>
                             {% endif %}
-                            <td>{{ submission.name }}</td>
+                            
                             <td>{{ submission.location }}</td>
                             <td>{{ submission.risk_assessment_done }}</td>
                             
                             <!-- Status Badge -->
                             <td>
                                 <span class="badge rounded-pill 
-                                    {% if submission.status == 'pending' %} bg-danger
-                                    {% elif submission.status == 'awaiting_supervisor' %} bg-warning
+                                    {% if submission.status == 'awaiting_supervisor' %} bg-warning
                                     {% elif submission.status == 'awaiting_manager' %} bg-info
                                     {% elif submission.status == 'approved' %} bg-success
                                     {% elif submission.status == 'disapproved' %} bg-secondary
                                     {% endif %}">
-                                    {% if submission.status == 'pending' %} Awaiting Supervisor Approval
-                                    {% elif submission.status == 'awaiting_supervisor' %} Awaiting Manager Approval
-                                    {% elif submission.status == 'awaiting_manager' %} Awaiting Client to Accept
+                                    {% if submission.status == 'awaiting_supervisor' %} Awaiting Supervisor Approval
+                                    {% elif submission.status == 'awaiting_manager' %} Awaiting Manager Approval
                                     {% elif submission.status == 'approved' %} Approved
                                     {% elif submission.status == 'disapproved' %} Disapproved
                                     {% endif %}
@@ -56,11 +61,11 @@
                             </td>
                             
                             <td>
-                                {% if is_client %}
+                                {% if is_vendor %}
                                 {% if submission.status == 'approved' %}
                                     <a href="#" class="btn btn-sm btn-secondary mb-1">Print</a>
                                    
-                                {% elif submission.status == 'pending' %}
+                                {% elif submission.status == 'awaiting_supervisor' %}
                                     <a href="{% url 'edit_form' submission.pk %}" class="btn btn-sm btn-secondary">Edit</a>
                                 {% endif %}
                                 
@@ -77,26 +82,26 @@
                                 <!-- Role-Based Action Buttons -->
                                 <td>
                                 {% if is_supervisor %}
-                                    {% if submission.status == 'pending' %}
-                                    <a href="{% url 'approve_supervisor' submission.pk %}" class="btn btn-sm btn-primary mb-2 mt-2">Approve</a>
+                                    {% if submission.status == 'awaiting_supervisor' %}
+                                    <a href="{% url 'edit_form' submission.pk %}" class="btn btn-sm btn-secondary">Sign</a> 
+                                    {% elif submission.status == 'supervisor_signed' %}                                   
+                                    <a href="{% url 'approve_supervisor' submission.pk %}" class="btn btn-sm btn-primary mb-1">Approve</a>
                                     <br>
                                     <a href="{% url 'disapprove_supervisor' submission.pk %}" class="btn btn-sm btn-danger mb-1">Disapprove</a>
                                     {% endif %}
                                 {% elif is_manager %}
-                                    {% if submission.status == 'awaiting_supervisor' %}
+                                    {% if submission.status == 'awaiting_manager' %}
+                                    <a href="{% url 'edit_form' submission.pk %}" class="btn btn-sm btn-secondary">Sign</a>
+                                    {% elif submission.status == 'manager_signed' %}
                                     <a href="{% url 'approve_manager' submission.pk %}" class="btn btn-sm btn-primary mb-1">Approve</a>
                                     <a href="{% url 'disapprove_manager' submission.pk %}" class="btn btn-sm btn-danger mb-1">Disapprove</a>
                                     {% endif %}
-                                {% elif is_client %}
-                                    {% if submission.status == 'awaiting_manager' %}
-                                    <a href="{% url 'approve_final' submission.pk %}" class="btn btn-sm btn-primary mb-1">Accept Job</a>
-                                    {% endif %}
-                                {% else %}
+                                {% comment %} {% else %}
                                     {% if submission.status == 'pending' %}
                                     <a href="{% url 'approve_supervisor' submission.pk %}" class="btn btn-sm btn-primary mb-1">Approve Supervisor</a>
                                     {% elif submission.status == 'awaiting_supervisor' %}
                                     <a href="{% url 'approve_manager' submission.pk %}" class="btn btn-sm btn-primary mb-1">Approve Manager</a>
-                                    {% endif %}
+                                    {% endif %} {% endcomment %}
                                 {% endif %}
     
                                 <!-- Client-specific actions (Delete and Edit) -->

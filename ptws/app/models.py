@@ -89,17 +89,23 @@ class PTWForm(models.Model):
     hseq_date = models.DateField(null=True)
     hseq_sign = models.CharField(max_length=255, null=True)
 
+    # Section 9: Manager
+    manager_name = models.CharField(max_length=255, null=True)
+    manager_date = models.DateField(null=True)
+    manager_sign = models.CharField(max_length=255, null=True)
+
 
     status = models.CharField(
         max_length=20,
         choices=[
-            ('pending', 'Pending'),
             ('awaiting_supervisor', 'Awaiting Supervisor Approval'),
+            ('supervisor_signed', 'Supervisor Signed'),
             ('awaiting_manager', 'Awaiting Manager Approval'),
+            ('manager_signed', 'Manager Signed'),
             ('approved', 'Approved'),
             ('disapproved', 'Disapproved'),
         ],
-        default='pending',
+        default='awaiting_supervisor',
     )
 
     def __str__(self):
@@ -148,13 +154,12 @@ class NHISForm(models.Model):
     status = models.CharField(
         max_length=20,
         choices=[
-            ('open', 'Open'),
             ('awaiting_supervisor', 'Awaiting Supervisor Approval'),
             ('awaiting_manager', 'Awaiting Manager Approval'),
             ('closed', 'Closed'),
             ('denied', 'Denied'),
         ],
-        default='open',
+        default='awaiting_supervisor',
     )
 
     def __str__(self):

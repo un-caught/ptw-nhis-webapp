@@ -31,5 +31,6 @@ urlpatterns = [
     path('disapprove_nhis-supervisor/<int:pk>/', views.disapprove_nhis_supervisor, name='disapprove_nhis_supervisor'),
     path('disapprove_nhis-manager/<int:pk>/', views.disapprove_nhis_manager, name='disapprove_nhis_manager'),
     path('form-report/', views.form_report, name='form_report'),
+    path('view_nhis_form/<int:pk>/', views.view_nhis_form, name='view_nhis_form'),
 
 ]

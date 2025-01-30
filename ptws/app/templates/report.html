@@ -8,14 +8,8 @@
         .status.approved {
             color: green;
         }
-        .status.pending {
-            color: orange;
-        }
         .status.disapproved {
             color: red;
-        }
-        .status.open {
-            color: orange;
         }
         .status.closed {
             color: green;
@@ -41,7 +35,7 @@
                 <h1 class="text-center mb-4 mt-2">Form Submission Report</h1>
                 <!-- Filters -->
                 <div class="filters mb-4">
-                    <form method="get" class="row g-3">
+                    <form method="get" class="row g-3" action="{% url 'form_report' %}">
                         <div class="col-md-4">
                             <label for="startDate" class="form-label">Start Date:</label>
                             <input type="date" name="startDate" class="form-control" value="{{ start_date }}">
@@ -58,8 +52,8 @@
 
                 {% if report_data %}
                     <div class="mb-4">
-                        <h3>Total NHIS Forms Submitted: <span class="badge bg-info">{{ total_nhis }}</span></h3>
-                        <h3>Total PTW Forms Submitted: <span class="badge bg-info">{{ total_ptw }}</span></h3>
+                        <h4>Total NHIR Forms Submitted: <span class="badge bg-info">{{ total_nhis }}</span></h4>
+                        <h4>Total PTW Forms Submitted: <span class="badge bg-info">{{ total_ptw }}</span></h4>
                     </div>
 
                     
@@ -88,7 +82,10 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
-                        <a href="?startDate={{ start_date }}&endDate={{ end_date }}&export=true" class="btn btn-success">Export to Excel</a>
+                        {% comment %} <a href="?startDate={{ start_date }}&endDate={{ end_date }}&export=true" class="btn btn-success">Export to Excel</a>
+                        <div class="download-btn">
+                            <a href="?startDate={{ start_date }}&endDate={{ end_date }}&download_pdf=true">Download Report as PDF</a>
+                        </div> {% endcomment %}
                     </table>
 
 
@@ -100,7 +97,7 @@
                             var pieChart = new Chart(ctx, {
                                 type: 'pie',
                                 data: {
-                                    labels: ['NHIS', 'PTW'],
+                                    labels: ['NHIR', 'PTW'],
                                     datasets: [{
                                         data: [{{ pie_chart_data_form_type.NHIS }}, {{ pie_chart_data_form_type.PTW }}],
                                         backgroundColor: ['#36A2EB', '#FFCE56'],
@@ -118,27 +115,27 @@
                             var statusPieChart = new Chart(ctx, {
                                 type: 'pie',
                                 data: {
-                                    labels: ['Pending', 'Approved', 'Disapproved', 'Awaiting Manager', 'Awaiting Supervisor'],  // Customize this if other statuses exist
+                                    labels: ['Approved', 'Disapproved', 'Awaiting Manager', 'Awaiting Supervisor'],  // Customize this if other statuses exist
                                     datasets: [{
-                                        data: [{{ pie_chart_data_status.pending }}, {{ pie_chart_data_status.approved }}, {{ pie_chart_data_status.disapproved }}, {{ pie_chart_data_status.awaiting_manager }}, {{ pie_chart_data_status.awaiting_supervisor }}],
-                                        backgroundColor: ['#FF5733', '#4CAF50', '#d7290a', '#e9b77d','#331f07'],
+                                        data: [{{ pie_chart_data_status.approved }}, {{ pie_chart_data_status.disapproved }}, {{ pie_chart_data_status.awaiting_manager }}, {{ pie_chart_data_status.awaiting_supervisor }}],
+                                        backgroundColor: ['#4CAF50', '#d7290a', '#e9b77d','#331f07'],
                                     }]
                                 },
                             });
                         </script>
                     </div>
                     <div class="mb-4 pt-5" style="width: 50%; height: 50%;">
-                        <h3>NHIS Status Distribution</h3>
+                        <h3>NHIR Status Distribution</h3>
                         <canvas id="nhisstatusPieChart" style="width: 200px; height: 200px;"></canvas>
                         <script>
                             var ctx = document.getElementById('nhisstatusPieChart').getContext('2d');
                             var statusPieChart = new Chart(ctx, {
                                 type: 'pie',
                                 data: {
-                                    labels: ['Open', 'Closed', 'Denied'],  // Customize this if other statuses exist
+                                    labels: ['Awaiting Manager', 'Awaiting Supervisor', 'Closed', 'Denied'],  // Customize this if other statuses exist
                                     datasets: [{
                                         data: [{{ pie_chart_data_status.open }}, {{ pie_chart_data_status.closed }}, {{ pie_chart_data_status.denied }}],
-                                        backgroundColor: ['#f48d0c', '#4CAF50', '#d7290a'],
+                                        backgroundColor: ['#f48d0c', '#331f07', '#4CAF50', '#d7290a'],
                                     }]
                                 },
                             });

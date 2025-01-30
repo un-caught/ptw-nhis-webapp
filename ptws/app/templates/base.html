@@ -116,12 +116,12 @@
         <div class="text-center text-white mb-4">
             <h3>Hi, {{request.user}}</h3>
         </div>
-        {% if is_client %}
+        {% if is_staff or is_vendor %}
             <a href="{% url 'client' %}" ><i class="fas fa-tachometer-alt"></i> Dashboard</a>
             <a href="{% url 'create_form' %}"><i class="fas fa-form"></i> Create PTW Form</a>
-            <a href="{% url 'create_nhis' %}"><i class="fas fa-form"></i> Create NHIS Form</a>
+            <a href="{% url 'create_nhis' %}"><i class="fas fa-form"></i> Create NHIR Form</a>
             <a href="{% url 'form_list' %}"><i class="fas fa-form"></i>PTW Forms</a>
-            <a href="{% url 'nhis_list' %}"><i class="fas fa-form"></i>NHIS Forms</a>
+            <a href="{% url 'nhis_list' %}"><i class="fas fa-form"></i>NHIR Forms</a>
             <a href="#"><i class="fas fa-cogs"></i> Settings</a>
             <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
 
@@ -132,7 +132,7 @@
             <a href="{% url 'manager' %}" ><i class="fas fa-tachometer-alt"></i> Dashboard</a>
             {% endif %}
             <a href="{% url 'form_list' %}"><i class="fas fa-form"></i>PTW Forms</a>
-            <a href="{% url 'nhis_list' %}"><i class="fas fa-form"></i>NHIS Forms</a>
+            <a href="{% url 'nhis_list' %}"><i class="fas fa-form"></i>NHIR Forms</a>
             <a href="{% url 'form_report' %}"><i class="fas fa-form"></i>Report</a>
             <a href="#"><i class="fas fa-cogs"></i> Settings</a>
             <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -149,7 +149,7 @@
             <button class="btn text-light" id="toggleSidebar">
                 <i class="fas fa-bars"></i>
             </button>
-            {% if is_client %}
+            {% if is_staff or is_vendor  %}
                 <a class="navbar-brand" href="{% url 'client' %}">Client Dashboard</a>
             {% elif is_supervisor %}
                 <a class="navbar-brand" href="{% url 'supervisor' %}">Supervisor Dashboard</a>

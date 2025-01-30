@@ -5,6 +5,7 @@
     <h2 class="my-4" data-aos="fade-up">Edit Form Submission</h2>
     <form method="post">
         {% csrf_token %}
+    
         <h3>Section 1: Work Details</h3>
         <div class="mb-3">
             <label for="location" class="form-label">1. Location Of Work</label>
@@ -138,9 +139,10 @@
              <label for="contractorSign" class="form-label">29. Sign</label>
              {{ form.contractor_sign }}
          </div>
-
+         
          <!-- Section 8: HSEQ -->
          <h3>Section 8: HSEQ</h3>
+         <h4>Please leave the section empty if you are not in HSEQ Deptment</h4>
          <div class="mb-3">
              <label for="hseqName" class="form-label">30. HSEQ Name</label>
              {{ form.hseq_name }}
@@ -153,6 +155,24 @@
              <label for="hseqSign" class="form-label">33. Sign</label>
              {{ form.hseq_sign }}
          </div>
+
+         
+         <!-- Section 8: HSEQ -->
+         <h3>Section 9: Manager</h3>
+         <h4>Please leave the section empty for the Manger</h4>
+         <div class="mb-3">
+             <label for="hseqName" class="form-label">30. Manager Name</label>
+             {{ form.manager_name }}
+         </div>
+         <div class="mb-3">
+             <label for="hseqDate" class="form-label">31. Date</label>
+             {{ form.manager_date }}
+         </div>
+         <div class="mb-3">
+             <label for="hseqSign" class="form-label">33. Sign</label>
+             {{ form.manager_sign }}
+         </div>
+
         <button type="submit">Save Changes</button>
     </form>
     </div>

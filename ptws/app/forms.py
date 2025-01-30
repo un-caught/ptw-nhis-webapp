@@ -5,9 +5,21 @@ from .models import *
 
 
 class CreateUserForm(UserCreationForm):
+    group_choices = forms.ChoiceField(
+        choices=[('staff', 'Staff'), ('vendor', 'Vendor')],
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
     class Meta:
         model = User
-        fields = ['username', 'password1', 'password2']
+        fields = ['username', 'email', 'password1', 'password2']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+        return user
+
+        
 
 class PTWSubmissionForm(forms.ModelForm):
     class Meta:
@@ -16,7 +28,7 @@ class PTWSubmissionForm(forms.ModelForm):
                   'start_datetime', 'duration', 'days', 'workers_count', 'department','contractor','contractor_supervisor', 
                   'work_place', 'work_location_isolation', 'personal_safety', 'additional_precautions', 'supervisor_name',
                   'applicant_name', 'applicant_date', 'applicant_sign', 'facility_manager_name', 'facility_manager_date', 'facility_manager_sign', 'certificates_required',
-                  'valid_from', 'valid_to', 'initials', 'contractor_name', 'contractor_date', 'contractor_sign', 'hseq_name', 'hseq_date', 'hseq_sign']
+                  'valid_from', 'valid_to', 'initials', 'contractor_name', 'contractor_date', 'contractor_sign', 'hseq_name', 'hseq_date', 'hseq_sign', 'manager_name', 'manager_date', 'manager_sign']
 
 
     #Work Details
@@ -78,15 +90,20 @@ class PTWSubmissionForm(forms.ModelForm):
     contractor_sign = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     #HSEQ
-    hseq_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    hseq_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}))
-    hseq_sign = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    hseq_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    hseq_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}), required=False)
+    hseq_sign = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+
+    #Manager
+    manager_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    manager_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}), required=False)
+    manager_sign = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
 
 
 class NHISSubmissionForm(forms.ModelForm):
     class Meta:
         model = NHISForm
-        fields = ['location', 'date', 'question', 'hazard', 'risk_type', 'ram_rating', 'observation', 
+        fields = ['location', 'date', 'hazard', 'risk_type', 'ram_rating', 'observation', 
         'action_taken', 'preventive_action', 'responsible_party', 'target_date', 'observed_by', 'dept', 'observed_date']
 
     
@@ -94,7 +111,6 @@ class NHISSubmissionForm(forms.ModelForm):
     #General Information
     location = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}))
-    question = forms.ChoiceField(choices=[('option1', 'Option 1'), ('option2', 'Option 2')], widget=forms.Select(attrs={'class': 'form-select'}))
 
     #Hazard Identification
     hazard = forms.ModelMultipleChoiceField(
@@ -130,4 +146,3 @@ class NHISSubmissionForm(forms.ModelForm):
     observed_by = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     dept = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     observed_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}))
-    status = forms.ChoiceField(choices=[('open', 'Open'), ('closed', 'Closed')], widget=forms.Select(attrs={'class': 'form-select'}))

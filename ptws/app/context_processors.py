@@ -16,22 +16,25 @@ def user_groups(request):
         ).count()
 
         # Group checks
-        is_client = request.user.groups.filter(name="client").exists()
         is_supervisor = request.user.groups.filter(name="supervisor").exists()
         is_manager = request.user.groups.filter(name="manager").exists()
+        is_staff = request.user.groups.filter(name="staff").exists()
+        is_vendor = request.user.groups.filter(name="vendor").exists()
     else:
         # For unauthenticated users, return default values
         approved_count = 0
         open_count = 0
         closed_count = 0
         pend_count = 0
-        is_client = False
+        is_staff = False
+        is_vendor = False
         is_supervisor = False
         is_manager = False
 
     # Return the context dictionary
     return {
-        'is_client': is_client,
+        'is_staff': is_staff,
+        'is_vendor': is_vendor,
         'is_supervisor': is_supervisor,
         'is_manager': is_manager,
         'approved_count': approved_count,

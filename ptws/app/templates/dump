@@ -81,3 +81,28 @@ def export_to_excel(report_data):
     <a href="?startDate={{ start_date }}&endDate={{ end_date }}&export=true" class="btn btn-success mb-3">
         Export to CSV
     </a>
+
+
+
+
+button lineup view, approve, disapprove
+
+
+report lab
+
+
+
+<!-- Section 8: HSEQ -->
+         <h3>Approval Section</h3>
+         <div class="mb-3">
+             <label for="hseqName" class="form-label">30. HSEQ Name</label>
+             {{ form.hseq_name }}
+         </div>
+         <div class="mb-3">
+             <label for="hseqDate" class="form-label">31. Date</label>
+             {{ form.hseq_date }}
+         </div>
+         <div class="mb-3">
+             <label for="hseqSign" class="form-label">33. Sign</label>
+             {{ form.hseq_sign }}
+         </div>
