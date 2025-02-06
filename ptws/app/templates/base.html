@@ -43,6 +43,7 @@
             background-color: #ff6600;
             transform: scale(1.05);
             transition: transform 0.2s ease;
+            font-weight: bold;
         }
         .sidebar .active {
             background-color: #ff6600;
@@ -54,7 +55,7 @@
             transition: margin-left 0.3s ease;
         }
         .top-navbar {
-            background-color: #ff6600;
+            background-color:rgb(243, 105, 14);
             color: white;
             padding: 10px 20px;
             border-radius: 15px;
@@ -114,7 +115,7 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="text-center text-white mb-4">
-            <h3>Hi, {{request.user}}</h3>
+            <h3>Hello, {{request.user.first_name}}</h3>
         </div>
         {% if is_staff or is_vendor %}
             <a href="{% url 'client' %}" ><i class="fas fa-tachometer-alt"></i> Dashboard</a>
@@ -150,7 +151,7 @@
                 <i class="fas fa-bars"></i>
             </button>
             {% if is_staff or is_vendor  %}
-                <a class="navbar-brand" href="{% url 'client' %}">Client Dashboard</a>
+                <a class="navbar-brand" href="{% url 'client' %}">Dashboard</a>
             {% elif is_supervisor %}
                 <a class="navbar-brand" href="{% url 'supervisor' %}">Supervisor Dashboard</a>
             {% else %}
@@ -162,10 +163,10 @@
 
             <div class="d-flex align-items-center ms-auto">
                 <!-- User's Name -->
-                <span class="user-name me-3">Welcome, John Doe</span>
+                <span class="user-name me-3">Welcome, {{request.user.first_name}} {{request.user.last_name}}</span>
                 
                 <!-- Notifications and Profile Links -->
-                <a class="nav-link" href="#"><i class="fas fa-bell"></i> Notifications</a>
+                <a class="nav-link" href="#" style="padding-right: 0.3rem;"><i class="fas fa-bell"></i> Notifications</a>
                 <a class="nav-link" href="#"><i class="fas fa-user"></i> Profile</a>
             </div>
         </nav>

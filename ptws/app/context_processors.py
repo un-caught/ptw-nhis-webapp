@@ -6,12 +6,28 @@ def user_groups(request):
     if request.user.is_authenticated:
         # Count of 'approved' PTWForms created by the logged-in user
         approved_count = PTWForm.objects.filter(status='approved', user=request.user).count()
-        open_count = NHISForm.objects.filter(status='open', user=request.user).count()
+        open_count = NHISForm.objects.filter(status__in=['awaiting_supervisor', 'awaiting_manager'], user=request.user).count()
         closed_count = NHISForm.objects.filter(status='closed', user=request.user).count()
+
+        #  supervisor page
+        total_ptw = PTWForm.objects.all().count()
+        total_nhis = NHISForm.objects.all().count()
+        approved_ptw = PTWForm.objects.filter(status='approved').count()
+        closed_nhis = NHISForm.objects.filter(status='closed').count()
+        disapproved_ptw = PTWForm.objects.filter(status='disapproved').count()
+        denied_nhis = NHISForm.objects.filter(status='denied').count()
+        pending_ptw = PTWForm.objects.filter(status__in=['awaiting_supervisor', 'awaiting_manager']).count()
+        pending_nhis = NHISForm.objects.filter(status__in=['awaiting_supervisor', 'awaiting_manager']).count()
+
+
+        # mannager
+        pending_ptw_manager = PTWForm.objects.filter(status='awaiting_manager').count()
+        pending_nhis_manager = NHISForm.objects.filter(status='awaiting_manager').count()
+
 
         # Count of 'pending' or other similar statuses for the logged-in user
         pend_count = PTWForm.objects.filter(
-            status__in=['awaiting_supervisor', 'pending', 'awaiting_manager'],
+            status__in=['awaiting_supervisor', 'awaiting_manager'],
             user=request.user
         ).count()
 
@@ -30,6 +46,16 @@ def user_groups(request):
         is_vendor = False
         is_supervisor = False
         is_manager = False
+        total_ptw = 0
+        total_nhis = 0
+        approved_ptw = 0
+        closed_nhis = 0
+        disapproved_ptw = 0
+        denied_nhis = 0
+        pending_ptw = 0
+        pending_nhis = 0
+        pending_ptw_manager = 0
+        pending_nhis_manager = 0
 
     # Return the context dictionary
     return {
@@ -41,4 +67,14 @@ def user_groups(request):
         'pend_count': pend_count,
         'open_count': open_count,
         'closed_count': closed_count,
+        'total_ptw': total_ptw,
+        'total_nhis': total_nhis,
+        'approved_ptw': approved_ptw,
+        'closed_nhis': closed_nhis,
+        'disapproved_ptw': disapproved_ptw,
+        'denied_nhis': denied_nhis,
+        'pending_ptw': pending_ptw,
+        'pending_nhis': pending_nhis,
+        'pending_ptw_manager': pending_ptw_manager,
+        'pending_nhis_manager': pending_nhis_manager,
     }
